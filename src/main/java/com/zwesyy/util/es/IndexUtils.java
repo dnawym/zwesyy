@@ -27,7 +27,7 @@ import com.zwesyy.eneity.IndexRequest;
  * @description:
  * @date: 2018年4月25日
  */
-public class ESHighUtils {
+public class IndexUtils {
 	
 	private static RestHighLevelClient client = null;
 
@@ -95,18 +95,18 @@ public class ESHighUtils {
 	/**
 	 * 打开索引
 	 */
-	public static boolean openIndex(IndexRequest indexRequest) throws IOException {
+	public static OpenIndexResponse openIndex(IndexRequest indexRequest) throws IOException {
 		OpenIndexRequest request = new OpenIndexRequest(indexRequest.getIndexName());
 		request.timeout(indexRequest.getTimeout());
 		request.masterNodeTimeout(indexRequest.getMasterNodeTimeout());
 		request.indicesOptions(IndicesOptions.strictExpandOpen());
-		if (indexRequest.getWaitForActiveShards() == null)
-			request.waitForActiveShards(ActiveShardCount.DEFAULT);
-		else
-			request.waitForActiveShards(indexRequest.getWaitForActiveShards());
+//		if (indexRequest.getWaitForActiveShards() == null)
+//			request.waitForActiveShards(ActiveShardCount.DEFAULT);
+//		else
+//			request.waitForActiveShards(indexRequest.getWaitForActiveShards());
 		
 		OpenIndexResponse response = client.indices().open(request);
-		return response.isAcknowledged();
+		return response;
 	}
 	
 	public static void openIndexAsyn(IndexRequest indexRequest,ActionListener listener) throws IOException {
@@ -144,7 +144,13 @@ public class ESHighUtils {
 		client.indices().closeAsync(request,listener);
 	}
 	
-	
-	
+	public static void close() {
+		if(client!=null)
+			try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	}
 
 }

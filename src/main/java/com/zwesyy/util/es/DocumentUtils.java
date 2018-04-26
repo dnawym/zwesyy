@@ -142,5 +142,14 @@ public class DocumentUtils {
 	public static void bulkDocAsyn(BulkRequest   request, ActionListener listener) throws IOException {
 		client.bulkAsync(request, listener);
 	}
+	
+	public static void close() {
+		if(client!=null)
+			try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	}
 
 }
