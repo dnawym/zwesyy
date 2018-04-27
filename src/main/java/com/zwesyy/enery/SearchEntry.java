@@ -1,4 +1,4 @@
-package com.zwesyy.eneity;
+package com.zwesyy.enery;
 
 import java.util.concurrent.TimeUnit;
 
@@ -7,8 +7,8 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.support.IndicesOptions;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 
 /**
@@ -18,7 +18,7 @@ import org.elasticsearch.search.sort.SortBuilder;
  * @description:
  * @date: 2018年4月26日
  */
-public class SearchQuery {
+public class SearchEntry {
 
 	private String index;
 
@@ -39,13 +39,13 @@ public class SearchQuery {
 		private TimeValue timeout = new TimeValue(60, TimeUnit.SECONDS);
 
 		private QueryBuilder query;
-		
+
 		private SortBuilder<?> sort;
-		//是否包含_source
-		private boolean fetchSource=true;
-		
+		// 是否包含_source
+		private boolean fetchSource = true;
+
 		private String[] includeFields;
-		
+
 		private String[] excludeFields;
 
 		public void setForm(int form) {
@@ -90,6 +90,26 @@ public class SearchQuery {
 			sourceBuilder.fetchSource(includeFields, excludeFields);
 			return sourceBuilder;
 		}
+
+//		public SearchSourceBuilder getHighlightingSourceBuilder() {
+//			SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+//			sourceBuilder.query(query);
+//			sourceBuilder.from(form);
+//			sourceBuilder.size(size);
+//			sourceBuilder.timeout(timeout);
+//			sourceBuilder.sort(sort);
+//			sourceBuilder.fetchSource(includeFields, excludeFields);
+//
+//			HighlightBuilder highlightBuilder = new HighlightBuilder();
+//			HighlightBuilder.Field highlightTitle = new HighlightBuilder.Field("title");
+//			highlightTitle.highlighterType("");
+//			highlightBuilder.field(highlightTitle);
+//			HighlightBuilder.Field highlightUser = new HighlightBuilder.Field("user");
+//			highlightBuilder.field(highlightUser);
+//			sourceBuilder.highlighter(highlightBuilder);
+//
+//			return sourceBuilder;
+//		}
 	}
 
 	private SourceBuilder sourceBuilder;
@@ -138,7 +158,7 @@ public class SearchQuery {
 		this.preference = preference;
 	}
 
-	public SearchRequest getRequest() {
+	public SearchRequest getSearchRequest() {
 		SearchRequest request = new SearchRequest(index);
 		request.types(types);
 

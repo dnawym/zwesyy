@@ -2,27 +2,10 @@ package zwesyy.test;
 
 import java.io.IOException;
 
-import org.apache.http.Header;
-import org.apache.http.HttpHost;
-import org.apache.http.RequestLine;
-import org.apache.http.util.EntityUtils;
-import org.elasticsearch.action.admin.indices.alias.Alias;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.open.OpenIndexResponse;
-import org.elasticsearch.action.support.ActiveShardCount;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.junit.Test;
 
-import com.zwesyy.client.ESHighCilent;
-import com.zwesyy.client.ESLowCilent;
-import com.zwesyy.eneity.IndexRequest;
-import com.zwesyy.util.es.IndexUtils;
+import com.zwesyy.enery.IndexEntry;
+import com.zwesyy.index.IndexUtil;
 
 public class IndexTest {
 
@@ -73,19 +56,19 @@ public class IndexTest {
 	//@Test
 	public static void test() throws IOException {
 		String mappings="{ \r\n" + 
-				"\"news\":{\r\n" + 
+				"	\"content\":{\r\n" + 
 				"		\"properties\":{\r\n" + 
 				"			\"title\":{\r\n" + 
 				"				\"type\":\"text\",\r\n" + 
-				"				\"index\" : true \r\n" + 
+				"				\"analyzer\" : \"ik_max_word\",\"index\" : true,\"search_analyzer\" : \"ik_max_word\" \r\n" + 
 				"			},\r\n" + 
 				"			\"content\":{\r\n" + 
 				"				\"type\":\"text\",\r\n" + 
-				"				\"index\" : true \r\n" + 
+				"				\"analyzer\" : \"ik_max_word\",\"index\" : true,\"search_analyzer\" : \"ik_max_word\" \r\n" + 
 				"			},\r\n" + 
 				"			\"summary\":{\r\n" + 
 				"				\"type\":\"text\",\r\n" + 
-				"				\"index\" : true \r\n" + 
+				"				\"analyzer\" : \"ik_max_word\",\"index\" : true,\"search_analyzer\" : \"ik_max_word\" \r\n" + 
 				"			},\r\n" + 
 				"			\"add_date\":{\r\n" + 
 				"				\"type\":\"date_range\",\r\n" + 
@@ -94,20 +77,19 @@ public class IndexTest {
 				"		}\r\n" + 
 				"	}\r\n" + 
 				"}";
-		IndexRequest request = new IndexRequest();
-		request.setIndexName("zxwyyb");
-		request.setAlias("zyb_news");
-		request.setMappingName("news");
+		IndexEntry request = new IndexEntry();
+		request.setIndexName("zxwyybcon");
+		request.setAlias("zyb_content");
+		request.setMappingName("content");
 		request.setMappings(mappings);
 		
 		
-		System.out.println("create index " + IndexUtils.createIndex(request));
+		System.out.println("create index " + IndexUtil.createIndex(request));
 		
 		
-		OpenIndexResponse response = IndexUtils.openIndex(request);
+		OpenIndexResponse response = IndexUtil.openIndex(request);
 		System.out.println("open index " + response.isAcknowledged());
 		
-		IndexUtils.close();
 	}
 	
 

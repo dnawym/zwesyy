@@ -11,31 +11,30 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 
-import com.zwesyy.eneity.SearchQuery;
-import com.zwesyy.util.es.SearchUtils;
+import com.zwesyy.enery.SearchEntry;
+import com.zwesyy.index.SearchUtil;
 
 public class SearchTest {
 	
 	public static void main(String[] args) throws IOException {
-		
 		
 		SearchRequest searchRequest = new SearchRequest(); 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder(); 
 		searchSourceBuilder.query(QueryBuilders.matchAllQuery()); 
 		searchRequest.source(searchSourceBuilder); 
 		
-		SearchQuery query = new SearchQuery();
-		query.setIndex("zxwyyb");
-		query.setTypes("news");
-		SearchQuery.SourceBuilder sourceBuilder = query.new SourceBuilder();
+		SearchEntry query = new SearchEntry();
+		query.setIndex("zxwyybcon");
+		query.setTypes("content");
+		SearchEntry.SourceBuilder sourceBuilder = query.new SourceBuilder();
 		sourceBuilder.setForm(0);
 		sourceBuilder.setSize(10);
 		sourceBuilder.setIncludeFields("id","content","title","summary","add_date");
-		sourceBuilder.setQuery(QueryBuilders.queryStringQuery("ActionListener"));
+		sourceBuilder.setQuery(QueryBuilders.queryStringQuery("索引"));
 		sourceBuilder.setSort(new ScoreSortBuilder().order(SortOrder.DESC));
 		query.setSourceBuilder(sourceBuilder);
 		
-		SearchResponse response = SearchUtils.search(query);
+		SearchResponse response = SearchUtil.search(query);
 		SearchHits hits = response.getHits();
 		for (SearchHit hit : hits) {
 			String index = hit.getIndex();
@@ -47,7 +46,6 @@ public class SearchTest {
 			System.out.println("记录 ：" +index +"-"+type+"-"+id+"-"+score+"-"+sourceAsString);
 		}
 		
-		SearchUtils.close();
 	}
 
 }

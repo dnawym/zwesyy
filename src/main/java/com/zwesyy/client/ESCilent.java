@@ -19,18 +19,23 @@ import org.slf4j.LoggerFactory;
 import com.zwesyy.util.ConfigUtils;
 
 /**
- * 高版本
+ * We plan on deprecating the TransportClient in Elasticsearch 7.0 and removing
+ * it completely in 8.0. Instead, you should be using the Java High Level REST
+ * Client, which executes HTTP requests rather than serialized Java requests.
+ * The migration guide describes all the steps needed to migrate.
+ * 
+ * 5.x之前的版本都是用 TransportClient 来连接，高版本官方推荐使用 Java High Level REST Client
+ * 来代替之前的，7.0以后要取消 TransportClient 的使用
+ * 
  * @author: zhangyongbin
  * @description:
  * @date: 2018年4月25日
  */
-public class ESHighCilent {
+public class ESCilent {
 
-	private static final Logger logger = LoggerFactory.getLogger(ESHighCilent.class);
+	private static final Logger logger = LoggerFactory.getLogger(ESCilent.class);
 
-	private static RestHighLevelClient client = null;
-
-	private static String clusterName = null;
+	private static ESCilent client = null;
 
 	private static String[] hosts = null;
 
@@ -51,10 +56,8 @@ public class ESHighCilent {
 	private static String password = null;
 
 	static {
-		clusterName = ConfigUtils.getConfig("cluster.name");
 		hosts = ConfigUtils.getConfig("es.hosts").split(",");
 		schema = ConfigUtils.getConfig("es.schema");
-		port = 9200;
 		maxRetryTimeout = ConfigUtils.getConfig("es.maxRetryTimeout") != null ? Integer.parseInt(ConfigUtils.getConfig("es.maxRetryTimeout")) : 6000;
 		connectTimeout = ConfigUtils.getConfig("es.connectTimeout") != null ? Integer.parseInt(ConfigUtils.getConfig("es.connectTimeout")) : 6000;
 		socketTimeout = ConfigUtils.getConfig("es.socketTimeout") != null ? Integer.parseInt(ConfigUtils.getConfig("es.socketTimeout")) : 60000;
@@ -64,15 +67,18 @@ public class ESHighCilent {
 		password = ConfigUtils.getConfig("es.password");
 	}
 
-	public static RestHighLevelClient getClient() {
-		if (client == null)
-			initClient();
-
+	public static ESCilent getInstance() {
+		if (client == null) {
+			synchronized (ESCilent.class) {
+				if (client == null) {
+					client = new ESCilent();
+				}
+			}
+		}
 		return client;
-
 	}
 
-	private static void initClient() {
+	public RestHighLevelClient getClient() {
 		RestHighLevelClient restClient = null;
 		try {
 
@@ -116,12 +122,10 @@ public class ESHighCilent {
 
 			restClient = new RestHighLevelClient(builder);
 
-			client = restClient;
-
 		} catch (Exception e) {
 			logger.error("初始化异常：{}", e);
 		}
-
+		return restClient;
 	}
 
 }
