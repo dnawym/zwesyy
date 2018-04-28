@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.support.IndicesOptions;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -29,7 +30,15 @@ public class SearchEntry {
 	private IndicesOptions indicesOptions = IndicesOptions.lenientExpandOpen();
 
 	private String preference;
+	
+	private Fuzziness fuzziness=Fuzziness.AUTO;
 
+	private Integer prefixLength;
+	
+	private Integer maxExpansions;
+	
+	private SourceBuilder sourceBuilder;
+	
 	public class SourceBuilder {
 
 		private int form;
@@ -90,74 +99,8 @@ public class SearchEntry {
 			sourceBuilder.fetchSource(includeFields, excludeFields);
 			return sourceBuilder;
 		}
-
-//		public SearchSourceBuilder getHighlightingSourceBuilder() {
-//			SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-//			sourceBuilder.query(query);
-//			sourceBuilder.from(form);
-//			sourceBuilder.size(size);
-//			sourceBuilder.timeout(timeout);
-//			sourceBuilder.sort(sort);
-//			sourceBuilder.fetchSource(includeFields, excludeFields);
-//
-//			HighlightBuilder highlightBuilder = new HighlightBuilder();
-//			HighlightBuilder.Field highlightTitle = new HighlightBuilder.Field("title");
-//			highlightTitle.highlighterType("");
-//			highlightBuilder.field(highlightTitle);
-//			HighlightBuilder.Field highlightUser = new HighlightBuilder.Field("user");
-//			highlightBuilder.field(highlightUser);
-//			sourceBuilder.highlighter(highlightBuilder);
-//
-//			return sourceBuilder;
-//		}
 	}
-
-	private SourceBuilder sourceBuilder;
-
-	public void setSourceBuilder(SourceBuilder sourceBuilder) {
-		this.sourceBuilder = sourceBuilder;
-	}
-
-	public String getIndex() {
-		return index;
-	}
-
-	public void setIndex(String index) {
-		this.index = index;
-	}
-
-	public String[] getTypes() {
-		return types;
-	}
-
-	public void setTypes(String... types) {
-		this.types = types;
-	}
-
-	public String getRouting() {
-		return routing;
-	}
-
-	public void setRouting(String routing) {
-		this.routing = routing;
-	}
-
-	public IndicesOptions getIndicesOptions() {
-		return indicesOptions;
-	}
-
-	public void setIndicesOptions(IndicesOptions indicesOptions) {
-		this.indicesOptions = indicesOptions;
-	}
-
-	public String getPreference() {
-		return preference;
-	}
-
-	public void setPreference(String preference) {
-		this.preference = preference;
-	}
-
+	
 	public SearchRequest getSearchRequest() {
 		SearchRequest request = new SearchRequest(index);
 		request.types(types);

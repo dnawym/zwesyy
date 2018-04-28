@@ -9,12 +9,14 @@ import org.elasticsearch.client.RestHighLevelClient;
 
 import com.zwesyy.client.ESCilent;
 import com.zwesyy.enery.SearchEntry;
+import com.zwesyy.enery.search.matchall.MatchAllQuery;
 
 /**
- * 搜索工具类
+ * search
+ * 
  * @author: zhangyongbin
  * @description:
- * @date: 2018年4月27日jar -xvf br	
+ * @date: 2018年4月27日
  */
 public class SearchUtil {
 	
@@ -23,9 +25,22 @@ public class SearchUtil {
 	static {
 		client = ESCilent.getInstance().getClient();
 	}
+	
+	/**
+	 * 查询全部
+	 */
+	public static SearchResponse matchAll(MatchAllQuery query) throws IOException {
+		SearchRequest request = query.getSearchRequest();
+		SearchResponse response = client.search(request);
+		return response;
+	}
+	
+	
+	
+	
 
 	/**
-	 * search
+	 * 
 	 */
 	public static SearchResponse search(SearchEntry query) throws IOException {
 		SearchRequest request = query.getSearchRequest();
