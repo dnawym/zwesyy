@@ -17,26 +17,26 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 读取配置文件
+ * 
  * @author: zhangyongbin
  * @description:
  * @date: 2018年4月11日
  */
 public class ConfigUtils {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ConfigUtils.class);
-	
+
 	private static Map<String, String> map = null;
-	
-	private final static String configFile= "config.properties";
-	
+
+	private final static String configFile = "config.properties";
+
 	public static String getConfig(String key) {
-		if(map == null)
-			getResourceMap(configFile,"UTF-8");
-		
+		if (map == null)
+			getResourceMap(configFile, "UTF-8");
+
 		return map.get(key);
 	}
-	
-	
+
 	private static Map<String, String> getResourceMap(String path, String encode) {
 		map = new HashMap<String, String>();
 		Properties properties = new Properties();

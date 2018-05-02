@@ -11,6 +11,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 
+import com.zwesyy.enery.search.ESQuery;
 import com.zwesyy.enery.search.SearchEntry;
 import com.zwesyy.index.SearchUtil;
 
@@ -27,10 +28,10 @@ public class SearchTest {
 		query.setIndex("zxwyybcon");
 		query.setTypes("content");
 		SearchEntry.SourceBuilder sourceBuilder = query.new SourceBuilder();
-		sourceBuilder.setForm(0);
+		sourceBuilder.setPage(1);
 		sourceBuilder.setSize(10);
 		sourceBuilder.setIncludeFields("id","content","title","summary","add_date");
-		sourceBuilder.setQuery(QueryBuilders.queryStringQuery("索引"));
+		sourceBuilder.setQuery(new ESQuery().getMatchQuery("title", "投资合作情况"));
 		sourceBuilder.setSort(new ScoreSortBuilder().order(SortOrder.DESC));
 		query.setSourceBuilder(sourceBuilder);
 		

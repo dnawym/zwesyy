@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -15,7 +13,6 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import com.zwesyy.client.ESCilent;
@@ -39,7 +36,7 @@ public class DocumentUtil {
 	/**
 	 * 创建
 	 */
-	public static IndexResponse createDoc(DocumentEntry entry, String source) throws IOException {
+	public static IndexResponse createDoc(DocumentEntry entry, Object source) throws IOException {
 		IndexRequest request = entry.getCreateRequest();
 		request.source(source, XContentType.JSON);
 		IndexResponse response = client.index(request);
@@ -53,14 +50,14 @@ public class DocumentUtil {
 		return response;
 	}
 
-	public static IndexResponse createDoc(DocumentEntry entry, String... source) throws IOException {
+	public static IndexResponse createDoc(DocumentEntry entry, Object... source) throws IOException {
 		IndexRequest request = entry.getCreateRequest();
 		request.source(source);
 		IndexResponse response = client.index(request);
 		return response;
 	}
 
-	public static void createDocAsyn(DocumentEntry entry, String source, ActionListener listener) throws IOException {
+	public static void createDocAsyn(DocumentEntry entry, Object source, ActionListener listener) throws IOException {
 		IndexRequest request = entry.getCreateRequest();
 		request.source(source, XContentType.JSON);
 		client.indexAsync(request, listener);
@@ -72,12 +69,12 @@ public class DocumentUtil {
 		client.indexAsync(request, listener);
 	}
 
-	public static void createDocAsyn(DocumentEntry entry, ActionListener listener, String... source) throws IOException {
+	public static void createDocAsyn(DocumentEntry entry, ActionListener listener, Object... source) throws IOException {
 		IndexRequest request = entry.getCreateRequest();
 		request.source(source);
 		client.indexAsync(request, listener);
 	}
-	
+
 	/**
 	 * 获取
 	 */
@@ -91,15 +88,15 @@ public class DocumentUtil {
 		GetRequest request = entry.getGetRequest();
 		client.getAsync(request, listener);
 	}
-	
-	public static GetResponse getDoc(DocumentEntry entry,boolean realtime, boolean refresh) throws IOException {
-		GetRequest request = entry.getGetRequest(realtime,refresh);
+
+	public static GetResponse getDoc(DocumentEntry entry, boolean realtime, boolean refresh) throws IOException {
+		GetRequest request = entry.getGetRequest(realtime, refresh);
 		GetResponse response = client.get(request);
 		return response;
 	}
 
-	public static void getDocAsyn(DocumentEntry entry, boolean realtime, boolean refresh,ActionListener listener) throws IOException {
-		GetRequest request = entry.getGetRequest(realtime,refresh);
+	public static void getDocAsyn(DocumentEntry entry, boolean realtime, boolean refresh, ActionListener listener) throws IOException {
+		GetRequest request = entry.getGetRequest(realtime, refresh);
 		client.getAsync(request, listener);
 	}
 
@@ -120,7 +117,7 @@ public class DocumentUtil {
 	/**
 	 * 修改
 	 */
-	public static UpdateResponse updateDoc(DocumentEntry entry, String source) throws IOException {
+	public static UpdateResponse updateDoc(DocumentEntry entry, Object source) throws IOException {
 		UpdateRequest request = entry.getUpdateRequest();
 		request.doc(source, XContentType.JSON);
 		UpdateResponse response = client.update(request);
@@ -134,7 +131,7 @@ public class DocumentUtil {
 		return response;
 	}
 
-	public static UpdateResponse updateDoc(DocumentEntry entry, String... source) throws IOException {
+	public static UpdateResponse updateDoc(DocumentEntry entry, Object... source) throws IOException {
 		UpdateRequest request = entry.getUpdateRequest();
 		request.doc(source);
 		UpdateResponse response = client.update(request);
@@ -153,47 +150,47 @@ public class DocumentUtil {
 		client.updateAsync(request, listener);
 	}
 
-	public static void updateDocAsyn(DocumentEntry entry, ActionListener listener, String source) throws IOException {
+	public static void updateDocAsyn(DocumentEntry entry, ActionListener listener, Object source) throws IOException {
 		UpdateRequest request = entry.getUpdateRequest();
 		request.doc(source);
 		client.updateAsync(request, listener);
 	}
-	
-	public static UpdateResponse updateDoc(DocumentEntry entry,int retryOnConflict, boolean fetchSource, String source) throws IOException {
-		UpdateRequest request = entry.getUpdateRequest(retryOnConflict,fetchSource);
+
+	public static UpdateResponse updateDoc(DocumentEntry entry, int retryOnConflict, boolean fetchSource, Object source) throws IOException {
+		UpdateRequest request = entry.getUpdateRequest(retryOnConflict, fetchSource);
 		request.doc(source, XContentType.JSON);
 		UpdateResponse response = client.update(request);
 		return response;
 	}
 
-	public static UpdateResponse updateDoc(DocumentEntry entry,int retryOnConflict, boolean fetchSource, Map<String, Object> source) throws IOException {
-		UpdateRequest request = entry.getUpdateRequest(retryOnConflict,fetchSource);
+	public static UpdateResponse updateDoc(DocumentEntry entry, int retryOnConflict, boolean fetchSource, Map<String, Object> source) throws IOException {
+		UpdateRequest request = entry.getUpdateRequest(retryOnConflict, fetchSource);
 		request.doc(source);
 		UpdateResponse response = client.update(request);
 		return response;
 	}
 
-	public static UpdateResponse updateDoc(DocumentEntry entry,int retryOnConflict, boolean fetchSource, String... source) throws IOException {
-		UpdateRequest request = entry.getUpdateRequest(retryOnConflict,fetchSource);
+	public static UpdateResponse updateDoc(DocumentEntry entry, int retryOnConflict, boolean fetchSource, Object... source) throws IOException {
+		UpdateRequest request = entry.getUpdateRequest(retryOnConflict, fetchSource);
 		request.doc(source);
 		UpdateResponse response = client.update(request);
 		return response;
 	}
 
-	public static void updateDocAsyn(DocumentEntry entry, String source,int retryOnConflict, boolean fetchSource, ActionListener listener) throws IOException {
-		UpdateRequest request = entry.getUpdateRequest(retryOnConflict,fetchSource);
+	public static void updateDocAsyn(DocumentEntry entry, String source, int retryOnConflict, boolean fetchSource, ActionListener listener) throws IOException {
+		UpdateRequest request = entry.getUpdateRequest(retryOnConflict, fetchSource);
 		request.doc(source, XContentType.JSON);
 		client.updateAsync(request, listener);
 	}
 
-	public static void updateDocAsyn(DocumentEntry entry,int retryOnConflict, boolean fetchSource, Map<String, Object> source, ActionListener listener) throws IOException {
-		UpdateRequest request = entry.getUpdateRequest(retryOnConflict,fetchSource);
+	public static void updateDocAsyn(DocumentEntry entry, int retryOnConflict, boolean fetchSource, Map<String, Object> source, ActionListener listener) throws IOException {
+		UpdateRequest request = entry.getUpdateRequest(retryOnConflict, fetchSource);
 		request.doc(source);
 		client.updateAsync(request, listener);
 	}
 
-	public static void updateDocAsyn(DocumentEntry entry,int retryOnConflict, boolean fetchSource, ActionListener listener, String source) throws IOException {
-		UpdateRequest request = entry.getUpdateRequest(retryOnConflict,fetchSource);
+	public static void updateDocAsyn(DocumentEntry entry, int retryOnConflict, boolean fetchSource, ActionListener listener, String source) throws IOException {
+		UpdateRequest request = entry.getUpdateRequest(retryOnConflict, fetchSource);
 		request.doc(source);
 		client.updateAsync(request, listener);
 	}

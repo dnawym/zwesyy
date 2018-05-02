@@ -31,7 +31,7 @@ public class IndexUtil {
 	static {
 		client = ESCilent.getInstance().getClient();
 	}
-	
+
 	/**
 	 * 创建索引
 	 */

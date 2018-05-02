@@ -3,6 +3,7 @@ package com.zwesyy.enery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.elasticsearch.common.xcontent.XContentType;
 
@@ -20,6 +21,14 @@ public class BulkEntry {
 	private String type;
 
 	private List<BulkSource> bulkSource;
+
+	public BulkEntry() {
+	}
+
+	public BulkEntry(String index, String type) {
+		this.index = index;
+		this.type = type;
+	}
 
 	public String getIndex() {
 		return index;
@@ -50,6 +59,19 @@ public class BulkEntry {
 			bulkSource = new ArrayList<>();
 
 		bulkSource.add(new BulkSource(id, xContentType, source));
+	}
+	
+	public void addBulkSource(String id, XContentType xContentType, Map<String, Object> source) {
+		if (bulkSource == null)
+			bulkSource = new ArrayList<>();
+		
+		Object[] newSource = new Object[source.entrySet().size()*2];
+		int i=0;
+		for (Entry<String, Object> entry : source.entrySet()) {
+			newSource[i++]=entry.getKey();
+			newSource[i++]=entry.getValue();
+		}
+		bulkSource.add(new BulkSource(id, xContentType, newSource));
 	}
 
 	public class BulkSource {

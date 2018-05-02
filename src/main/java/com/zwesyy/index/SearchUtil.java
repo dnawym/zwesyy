@@ -19,34 +19,31 @@ import com.zwesyy.enery.search.SearchEntry;
  * @date: 2018年4月27日
  */
 public class SearchUtil {
-	
+
 	private static RestHighLevelClient client = null;
 	private static ESQuery esQuery = null;
 
 	static {
 		client = ESCilent.getInstance().getClient();
-		esQuery= new ESQuery();
+		esQuery = new ESQuery();
 	}
-	
+
 	/**
 	 * 查询
 	 */
-	public static SearchResponse match(SearchEntry query) throws IOException {
+	public static SearchResponse search(SearchEntry query) throws IOException {
 		SearchRequest request = query.getSearchRequest();
 		SearchResponse response = client.search(request);
 		return response;
 	}
-	
-	public static void searchAsyn(SearchEntry query, ActionListener listener) throws IOException {
+
+	public static void searchAsync(SearchEntry query, ActionListener listener) throws IOException {
 		SearchRequest request = query.getSearchRequest();
 		client.searchAsync(request, listener);
 	}
-	
+
 	/**
-	 * Highlighting search 
+	 * Highlighting search
 	 */
-	
-	
-	
 
 }

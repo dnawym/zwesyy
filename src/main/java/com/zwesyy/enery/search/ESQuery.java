@@ -41,7 +41,7 @@ public class ESQuery {
 		this.prefixLength = prefixLength;
 		this.maxExpansions = maxExpansions;
 	}
-	
+
 	/**
 	 * 查询全部
 	 */
@@ -138,17 +138,15 @@ public class ESQuery {
 	}
 
 	/**
-	 * 用来合并多个过滤条件查询结果的布尔逻辑,它包含一下操作符：
-	 * must :: 多个查询条件的完全匹配,相当于 and。
-	 * must_not :: 多个查询条件的相反匹配，相当于 not。
-	 * should :: 至少有一个查询条件匹配, 相当于 or
+	 * 用来合并多个过滤条件查询结果的布尔逻辑,它包含一下操作符： must :: 多个查询条件的完全匹配,相当于 and。 must_not ::
+	 * 多个查询条件的相反匹配，相当于 not。 should :: 至少有一个查询条件匹配, 相当于 or
 	 */
-//	public BoolQueryBuilder getBoolQuery(String name,String... must) {
-//		BoolQueryBuilder query = QueryBuilders.boolQuery();
-//		for(int i=0;i<must.length;i++) {
-//			query.m.must(QueryBuilders.termsQuery(name, must));
-//		}
-//		return query;
-//	}
+	// public BoolQueryBuilder getBoolQuery(String name,String... must) {
+	// BoolQueryBuilder query = QueryBuilders.boolQuery();
+	// for(int i=0;i<must.length;i++) {
+	// query.m.must(QueryBuilders.termsQuery(name, must));
+	// }
+	// return query;
+	// }
 
 }
