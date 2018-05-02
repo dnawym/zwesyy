@@ -11,7 +11,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 
-import com.zwesyy.enery.SearchEntry;
+import com.zwesyy.enery.search.SearchEntry;
 import com.zwesyy.index.SearchUtil;
 
 public class SearchTest {

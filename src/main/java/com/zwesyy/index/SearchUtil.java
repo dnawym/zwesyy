@@ -8,8 +8,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 
 import com.zwesyy.client.ESCilent;
-import com.zwesyy.enery.SearchEntry;
-import com.zwesyy.enery.search.matchall.MatchAllQuery;
+import com.zwesyy.enery.search.ESQuery;
+import com.zwesyy.enery.search.SearchEntry;
 
 /**
  * search
@@ -21,33 +21,22 @@ import com.zwesyy.enery.search.matchall.MatchAllQuery;
 public class SearchUtil {
 	
 	private static RestHighLevelClient client = null;
+	private static ESQuery esQuery = null;
 
 	static {
 		client = ESCilent.getInstance().getClient();
+		esQuery= new ESQuery();
 	}
 	
 	/**
-	 * 查询全部
+	 * 查询
 	 */
-	public static SearchResponse matchAll(MatchAllQuery query) throws IOException {
+	public static SearchResponse match(SearchEntry query) throws IOException {
 		SearchRequest request = query.getSearchRequest();
 		SearchResponse response = client.search(request);
 		return response;
 	}
 	
-	
-	
-	
-
-	/**
-	 * 
-	 */
-	public static SearchResponse search(SearchEntry query) throws IOException {
-		SearchRequest request = query.getSearchRequest();
-		SearchResponse response = client.search(request);
-		return response;
-	}
-
 	public static void searchAsyn(SearchEntry query, ActionListener listener) throws IOException {
 		SearchRequest request = query.getSearchRequest();
 		client.searchAsync(request, listener);

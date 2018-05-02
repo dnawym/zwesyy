@@ -2,75 +2,115 @@ package com.zwesyy.enery.search;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.support.IndicesOptions;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.ScoreSortBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 
+/**
+ * 搜索信息类
+ * 
+ * @author: zhangyongbin
+ * @description:
+ * @date: 2018年4月26日
+ */
 public class SearchEntry {
 
 	private String index;
 
 	private String[] types;
 
-	private int page = 1;
+	private String routing;
 
-	private int size = 15;
+	private IndicesOptions indicesOptions = IndicesOptions.lenientExpandOpen();
 
-	private TimeValue timeout = new TimeValue(60, TimeUnit.SECONDS);
-
-	private QueryBuilder query ;
-
-	private SortBuilder<?> sort = new ScoreSortBuilder();
+	private String preference;
 	
-	private SortOrder order = SortOrder.ASC;
-	// 是否包含_source
-	private boolean fetchSource = true;
-
-	private String[] includeFields = {};
-
-	private String[] excludeFields = {};
+	private SourceBuilder sourceBuilder;
 	
+	public class SourceBuilder {
+
+		private int form;
+
+		private int size;
+
+		private TimeValue timeout = new TimeValue(60, TimeUnit.SECONDS);
+
+		private QueryBuilder query;
+
+		private SortBuilder<?> sort;
+		// 是否包含_source
+		private boolean fetchSource = true;
+
+		private String[] includeFields;
+
+		private String[] excludeFields;
+
+		public void setForm(int form) {
+			this.form = form;
+		}
+
+		public void setSize(int size) {
+			this.size = size;
+		}
+
+		public void setTimeout(TimeValue timeout) {
+			this.timeout = timeout;
+		}
+
+		public void setQuery(QueryBuilder query) {
+			this.query = query;
+		}
+
+		public void setSort(SortBuilder<?> sort) {
+			this.sort = sort;
+		}
+
+		public void setFetchSource(boolean fetchSource) {
+			this.fetchSource = fetchSource;
+		}
+
+		public void setIncludeFields(String... includeFields) {
+			this.includeFields = includeFields;
+		}
+
+		public void setExcludeFields(String... excludeFields) {
+			this.excludeFields = excludeFields;
+		}
+
+		public SearchSourceBuilder getSourceBuilder() {
+			SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+			sourceBuilder.query(query);
+			sourceBuilder.from(form);
+			sourceBuilder.size(size);
+			sourceBuilder.timeout(timeout);
+			sourceBuilder.sort(sort);
+			if(includeFields!=null && excludeFields!=null)
+				sourceBuilder.fetchSource(includeFields, excludeFields);
+			else
+				sourceBuilder.fetchSource(fetchSource);
+			return sourceBuilder;
+		}
+	}
 	
-	public SearchEntry(String index,String[] types,String name,String text) {
-		this.index = index;
-		this.types = types;
-		this.name = name;
-		this.text = text;
-	}
+	public SearchRequest getSearchRequest() {
+		SearchRequest request = new SearchRequest(index);
+		request.types(types);
 
-	public SearchEntry(String index,String[] types,int page, int size,QueryBuilder query) {
-		this.query = query;
-		QueryBuilders.matchQuery("user", "kimchy")
+		if (StringUtils.isNotBlank(routing))
+			request.routing(routing);
 
-	}
+		if (StringUtils.isNotBlank(preference))
+			request.preference(preference);
 
-	public SearchEntry(int page, int size, SortBuilder<?> sort, boolean fetchSource, String[] includeFields, String[] excludeFields) {
-		this.page = page;
-		this.size = size;
-		this.sort = sort;
-		this.fetchSource = fetchSource;
-		this.includeFields = includeFields;
-		this.excludeFields = excludeFields;
-	}
-
-	public SearchSourceBuilder getSourceBuilder() {
-		SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-		sourceBuilder.query(query);
-		sourceBuilder.from(getForm());
-		sourceBuilder.size(size);
-		sourceBuilder.timeout(timeout);
-		sourceBuilder.sort(sort);
-		sourceBuilder.fetchSource(includeFields, excludeFields);
-		return sourceBuilder;
-	}
-
-	public int getForm() {
-		return (page - 1) * size;
+		request.indicesOptions(IndicesOptions.lenientExpandOpen());
+		request.source(sourceBuilder.getSourceBuilder());
+		return request;
 	}
 
 }
